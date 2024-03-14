@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bài 4</title>
+</head>
+<style>
+    body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to right, #02a92e, #0468f4); /* Gradient từ trên xuống dưới */
+            background-size: cover; /* Lấp đầy toàn bộ phần nền */
+            background-repeat: no-repeat; /* Không lặp lại hình ảnh */
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 300px; /* Độ rộng của khung chứa */
+            padding: 10px; /* Khoảng cách giữa nội dung và biên khung chứa */
+            border: 1px solid #ccc; /* Viền khung chứa */
+            background-color: #f0f0f0; /* Màu nền của khung chứa */
+            border-radius: 10px; /* Bo góc của khung chứa */
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0px;
+            color: #fff;
+            background-color: blue;
+            padding: 10px;
+            border-top-left-radius: 10px; /* Bo góc trên bên trái của tiêu đề */
+            border-top-right-radius: 10px; /* Bo góc trên bên phải của tiêu đề */
+        }
+
+        label {
+            color: #000;
+            display: block;
+            margin-top: 0px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            box-sizing: border-box; /* Đảm bảo rằng padding và border không làm thay đổi kích thước của ô input */
+        }
+
+        button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+        #result {
+            color: red;
+            padding: 5px;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+            font-weight: bold;
+        }
+</style>
+<body>
+    
+    <center>
+      <center><div class="container">
+        <lable><h1>Tính Chỉ Số BMI</h1></lable>
+        <div class="form-group">
+            <label for="weight">Nhập cân nặng (kg):</label>
+            <input type="number" id="weight" name="weight" required>
+        </div>
+        <div class="form-group">
+            <label for="height">Nhập chiều cao (m):</label>
+            <input type="number" id="height" name="height" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Chọn loại tuổi:</label>
+            <select id="age" name="age">
+                <option value="tre">Trẻ em</option>
+                <option value="thanh_nien">Thanh niên</option>
+                <option value="trung_nien">Trung niên</option>
+                <option value="gia">Già, lớn tuổi</option>
+            </select>
+        </div>
+        <button onclick="calculateBMI()">Tính BMI</button>
+        <div class="result-container">
+            <h2>Kết Quả</h2>
+            <p id="bmi-value"></p>
+            <p id="bmi-category"></p>
+            <br>
+    <p> <span id="bmi-value"></span></p>
+    <p id="bmi-category"></p>
+    <p id="result"></p>
+        </div>
+    </div>
+    <script>
+        /* import java.util.Scanner;
+
+public class BmiCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("TÍNH CHỈ SỐ BMI");
+        System.out.print("Nhập cân nặng? ");
+        double weight = scanner.nextDouble();
+        System.out.print("Nhập chiều cao? ");
+        double height = scanner.nextDouble();
+        System.out.println("Chọn loại tuổi?");
+        System.out.println("Trẻ em, trung niên, già, lớn tuổi");
+        System.out.print("Già, lớn tuổi: ");
+        String ageType = scanner.next();
+
+        double bmi = calculateBmi(weight, height);
+        String bmiCategory = getBmiCategory(bmi);
+
+        System.out.printf("TÍNH BMI%nKẾT QUẢ%n%.2f%n", bmi);
+        System.out.printf("BÉO PHÌ ĐỘ %s%n", bmiCategory);
+
+        if (ageType.equalsIgnoreCase("Già") || ageType.equalsIgnoreCase("Lớn tuổi")) {
+            System.out.println("Hạn chế ăn mỡ động vật.");
+        }
+    }
+
+    private static double calculateBmi(double weight, double height) {
+        return weight / Math.pow(height, 2);
+    }
+
+    private static String getBmiCategory(double bmi) {
+        if (bmi < 18.5) {
+            return "1";
+        } else if (bmi < 24.9) {
+            return "2";
+        } else {
+            return "3";
+        }
+    }
+} */function calculateBMI() {
+  const weight = parseFloat(document.getElementById("weight").value);
+  const height = parseFloat(document.getElementById("height").value);
+  const age = document.getElementById("age").value;
+  const ageGroup = getAgeGroup(age);
+
+  // BMI calculation formula
+  const bmi = weight / (height * height);
+
+  // Determine BMI category based on age group
+  const bmiCategory = getBMICategory(bmi, ageGroup);
+
+  // Update BMI value element
+  document.getElementById("bmi-value").textContent = bmi.toFixed(2);
+
+  // Update BMI category element with additional message
+  const bmiCategoryElement = document.getElementById("bmi-category");
+  bmiCategoryElement.textContent = bmiCategory;
+
+  // Add additional message based on BMI category and age group
+  const messageElement = document.createElement("p");
+  messageElement.style.color = "red"; // Set text color to red
+
+  let message = "";
+  if (ageGroup === "trung-nien") {
+    if (bmiCategory === "Béo phì cấp độ I") {
+      message = "Khám định kỳ.";
+    }
+  } else if (ageGroup === "gia-lon-tuoi") {
+    if (bmiCategory === "Béo phì cấp độ II") {
+      message = "Tập thể dục thường xuyên.";
+    } else if (bmiCategory === "Béo phì cấp độ III") {
+      message = "Hạn chế ăn mỡ động vật.";
+    }
+  }
+
+  // Append the message element after the BMI category
+  bmiCategoryElement.appendChild(messageElement);
+  messageElement.textContent = message;
+}
+
+function getAgeGroup(age) {
+  if (age >= 18 && age < 60) {
+    return "trung-nien";
+  } else {
+    return "gia-lon-tuoi";
+  }
+}
+
+function getBMICategory(bmi, ageGroup) {
+  if (ageGroup === "trung-nien") {
+    if (bmi < 25) {
+      return "Bình thường";
+    } else if (bmi < 30) {
+      return "Béo phì cấp độ I";
+    } else {
+      return "Béo phì cấp độ II";
+    }
+  } else {
+    if (bmi < 24) {
+      return "Bình thường";
+    } else if (bmi < 27) {
+      return "Béo phì cấp độ II";
+    } else {
+      return "Béo phì cấp độ III";
+    }
+  }
+}
+    </script>
+    </div>
+    </center>
+    </center>
+</body>
+</html>
